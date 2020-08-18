@@ -1,0 +1,33 @@
+body {
+    /*background-color: brown;*/
+}
+
+/*#container {
+    border: 2px black solid;
+    background-color: lemonchiffon;
+}
+#img_container {
+    border: 2px black solid;
+    background-color: forestgreen;
+}
+
+#img_container img {
+    height: 100px;
+}*/
+.canvas {
+    border: 3px black solid;
+    height: 45em;
+    width: 80%;
+}
+
+.lager {
+    display: inline-flex;
+}
+
+.item_img {
+    height: 7em;
+    width: 7em;
+    object-fit: contain;
+    object-position: center;
+    border: 1px solid black;
+}

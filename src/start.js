@@ -1,18 +1,28 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Redirect } from "react-router";
-import Test from "./test";
+//import { Redirect } from "react-router";
+//import Test from "./test_app";
+import Lager from "./lager";
+import Canvas from "./app";
+import { createStore, applyMiddleware } from "redux";
+import { Provider } from "react-redux";
+import reduxPromise from "redux-promise";
+import { composeWithDevTools } from "redux-devtools-extension";
+import reducer from "./reducer";
 
-ReactDOM.render(<HelloWorld />, document.querySelector("main"));
+export const store = createStore(
+    reducer,
+    composeWithDevTools(applyMiddleware(reduxPromise))
+);
 
-function HelloWorld() {
+function MixnMatch() {
     return (
-        <div>
-            <div>Hello, World!</div>
-            <Test />
-        </div>
+        <Provider store={store}>
+            <Canvas />
+        </Provider>
     );
 }
+ReactDOM.render(<MixnMatch />, document.querySelector("main"));
 
 //
 

@@ -5,6 +5,6 @@ export default function reducer(state = {}, actions) {
             lager: actions.lager,
         };
     }
-    console.log("state: ", state);
+    //console.log("state: ", state);
     return state;
 }

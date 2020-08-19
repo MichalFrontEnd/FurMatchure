@@ -31,3 +31,8 @@ body {
     object-position: center;
     border: 1px solid black;
 }
+
+.newlayer {
+    border: 2px rebeccapurple solid;
+    height: max-content;
+}

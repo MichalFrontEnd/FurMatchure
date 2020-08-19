@@ -22,10 +22,10 @@ if (process.env.NODE_ENV != "production") {
 }
 
 app.get("/lagermenu", (req, res) => {
-    console.log("route working");
+    //console.log("route working");
     db.getLager()
         .then(({ rows }) => {
-            console.log("rows in getLager: ", rows);
+            //console.log("rows in getLager: ", rows);
             res.json({ rows });
         })
         .catch((err) => {

@@ -2,6 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import { Stage, Layer, Text, Image, Transformer } from "react-konva";
 import { useDispatch, useSelector } from "react-redux";
 import { getLager } from "./actions";
+//import Colors from "./colors";
+import { SwatchesPicker } from "react-color";
 
 //import Konva from "konva";
 
@@ -14,6 +16,7 @@ export default function Canvas() {
     const trRef = useRef(null);
     const [isSelected, setIsSelected] = useState(null);
     const [toggleTransformer, setToggleTransformer] = useState(false);
+    const [color, setColor] = useState("#fff");
 
     let updateImage;
     let newImageState;
@@ -47,7 +50,7 @@ export default function Canvas() {
                 width: this.width,
                 height: this.height,
                 transformerVis: false,
-                fill: "white",
+                fill: color,
             },
         ]);
     }
@@ -115,7 +118,7 @@ export default function Canvas() {
     }
 
     function imgTransform(i, id, e) {
-        console.log("i: ", i);
+        //console.log("i: ", i);
         e.cancelBubble = true;
         setIsSelected(id);
 
@@ -135,7 +138,7 @@ export default function Canvas() {
                 return { ...img, transformerVis: false };
             }
         });
-        console.log("newImageState: ", newImageState);
+        //console.log("newImageState: ", newImageState);
         setSelectedImage(newImageState);
         trRef.current.node(scaleRef.current);
         trRef.current.getLayer().batchDraw();
@@ -147,8 +150,17 @@ export default function Canvas() {
     }
     //console.log("toggleTransformer: ", toggleTransformer);
     //console.log("updateImage: ", updateImage);
-    console.log("selectedImage: ", selectedImage);
+    //console.log("selectedImage: ", selectedImage);
     console.log("isSelected: ", isSelected);
+
+    function pickColor(color) {
+        //console.log("something");
+        //console.log("color: ", color);
+        setColor(color.hex);
+        updateImage = isSelected;
+    }
+    //console.log("color: ", color);
+
     return (
         <div id="test">
             <div className="lager">
@@ -195,7 +207,7 @@ export default function Canvas() {
                                     image={img.image}
                                     name={img.name}
                                     id={img.image.id}
-                                    //fill={img.fill}
+                                    fill={img.fill}
                                     draggable
                                     onDragEnd={(e) => {
                                         updatePosition(i, e);
@@ -216,6 +228,7 @@ export default function Canvas() {
                         );
                     })}
             </Stage>
+            <SwatchesPicker onChange={pickColor} color={color} />
         </div>
     );
 }

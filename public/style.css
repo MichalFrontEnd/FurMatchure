@@ -36,3 +36,7 @@ body {
     border: 2px rebeccapurple solid;
     height: max-content;
 }
+
+.invisible {
+    visibility: hidden;
+}

@@ -4,11 +4,11 @@
 
 DROP TABLE IF EXISTS items;
 
-CREATE TABLE items(
+CREATE TABLE items (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255),
     path VARCHAR(255),
-    category VARCHAR(255),
+    category VARCHAR(255)
 );
 
 INSERT INTO items (name, path, category) VALUES (

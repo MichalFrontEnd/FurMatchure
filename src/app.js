@@ -12,23 +12,19 @@ export default function Canvas() {
     const scaleRef = useRef(null);
     const dispatch = useDispatch();
     const trRef = useRef(null);
+    const [isSelected, setIsSelected] = useState(null);
+    const [toggleTransformer, setToggleTransformer] = useState(false);
+
     let updateImage;
     let newImageState;
 
     useEffect(() => {
         dispatch(getLager());
+
         //loadImage(url);
     }, []);
-
+    console.log("isSelected:", isSelected);
     const lager = useSelector((state) => state.lager);
-
-    const checkDeselect = (e) => {
-        // deselect when clicked on empty area
-        const clickedOnEmpty = e.target === e.target.getStage();
-        if (clickedOnEmpty) {
-            toggleTransformer(null);
-        }
-    };
 
     function loadImage(src, name, id) {
         const img = new window.Image();
@@ -38,13 +34,21 @@ export default function Canvas() {
         img.crossOrigin = "Anonymous";
         imageRef.current = img;
         imageRef.current.addEventListener("load", handleLoad);
-        console.log("img: ", img);
+        //console.log("img: ", img);
     }
 
     function handleLoad() {
         setSelectedImage((selectedImage) => [
             ...selectedImage,
-            { image: imageRef.current, x: 0, y: 0 },
+            {
+                image: imageRef.current,
+                x: 0,
+                y: 0,
+                width: this.width,
+                height: this.height,
+                transformerVis: false,
+                fill: "white",
+            },
         ]);
     }
 
@@ -76,14 +80,16 @@ export default function Canvas() {
         //console.log("newImageState after mapping: ", newImageState);
         //console.log("selectedImage: ", selectedImage);
     }
-    console.log("selectedImage: ", selectedImage);
+    //console.log("selectedImage: ", selectedImage);
 
-    function toggleTransformer(i, e) {
-        console.log("scaleRef in toggleTransformer: ", scaleRef.current);
-        //console.log("i: ", i);
-        trRef.current.node(scaleRef.current);
-        trRef.current.getLayer().batchDraw();
-    }
+    //const checkDeselect = (e) => {
+    //    // deselect when clicked on empty area
+    //    console.log("e.target:", e.target);
+    //    const clickedOnEmpty = e.target === e.target.getStage();
+    //    if (clickedOnEmpty) {
+    //        setIsSelected(null);
+    //    }
+    //};
 
     function updateSize(i, e) {
         const node = e.target.attrs;
@@ -94,6 +100,7 @@ export default function Canvas() {
         updateImage.y = node.y;
         node.image.height = node.image.height * node.scaleY;
         node.image.width = node.image.width * node.scaleX;
+        updateImage.fill = "blue";
         //console.log("updateImagePos after,...: ", updateImagePos);
 
         newImageState = selectedImage.map((img, idx) => {
@@ -106,8 +113,42 @@ export default function Canvas() {
 
         setSelectedImage(newImageState);
     }
-    console.log("updateImage: ", updateImage);
 
+    function imgTransform(i, id, e) {
+        console.log("i: ", i);
+        e.cancelBubble = true;
+        setIsSelected(id);
+
+        //console.log("e.target==e.target.getImage(): ", e.target == Image());
+        setToggleTransformer(true);
+        const clickedOnEmpty = e.target === e.target.getStage();
+        if (clickedOnEmpty) {
+            //setIsSelected(null);
+        }
+        //console.log("trRef: ", trRef);
+
+        updateImage = selectedImage[i];
+        newImageState = selectedImage.map((img, idx) => {
+            if (idx == i) {
+                return { ...updateImage, transformerVis: true };
+            } else {
+                return { ...img, transformerVis: false };
+            }
+        });
+        console.log("newImageState: ", newImageState);
+        setSelectedImage(newImageState);
+        trRef.current.node(scaleRef.current);
+        trRef.current.getLayer().batchDraw();
+
+        //if (isSelected) {
+        //    console.log("something");
+        //    //console.log("i: ", i);
+        //}
+    }
+    //console.log("toggleTransformer: ", toggleTransformer);
+    //console.log("updateImage: ", updateImage);
+    console.log("selectedImage: ", selectedImage);
+    console.log("isSelected: ", isSelected);
     return (
         <div id="test">
             <div className="lager">
@@ -129,9 +170,11 @@ export default function Canvas() {
 
             <Stage
                 className="canvas"
-                width={innerWidth}
-                height={innerHeight}
-                onMouseDown={checkDeselect}
+                width={parent.innerWidth}
+                height={parent.innerHeight}
+                onClick={() => {
+                    setIsSelected(null);
+                }}
             >
                 <Layer>
                     <Text
@@ -144,25 +187,30 @@ export default function Canvas() {
                         return (
                             <Layer className="newlayer" key={i}>
                                 <Image
+                                    onClick={(e) => {
+                                        imgTransform(i, img.image.id, e);
+                                    }}
                                     x={img.x}
                                     y={img.y}
                                     image={img.image}
                                     name={img.name}
-                                    id={img.id}
+                                    id={img.image.id}
+                                    //fill={img.fill}
                                     draggable
                                     onDragEnd={(e) => {
                                         updatePosition(i, e);
-                                    }}
-                                    onClick={(e) => {
-                                        toggleTransformer(i, e);
                                     }}
                                     ref={scaleRef}
                                     onTransformEnd={(e) => {
                                         updateSize(i, e);
                                     }}
+                                    isSelected={img.image.id === isSelected}
+                                    onSelect={() => {
+                                        setIsSelected(img.image.id);
+                                    }}
                                 />
-                                {toggleTransformer && (
-                                    <Transformer ref={trRef} />
+                                {img.image.id == isSelected && (
+                                    <Transformer ref={trRef} key={i} />
                                 )}
                             </Layer>
                         );

@@ -50,7 +50,7 @@ export default function Canvas() {
                 width: this.width,
                 height: this.height,
                 transformerVis: false,
-                fill: color,
+                fill: "white",
             },
         ]);
     }
@@ -103,7 +103,7 @@ export default function Canvas() {
         updateImage.y = node.y;
         node.image.height = node.image.height * node.scaleY;
         node.image.width = node.image.width * node.scaleX;
-        updateImage.fill = "blue";
+        //updateImage.fill = "blue";
         //console.log("updateImagePos after,...: ", updateImagePos);
 
         newImageState = selectedImage.map((img, idx) => {
@@ -138,9 +138,12 @@ export default function Canvas() {
                 return { ...img, transformerVis: false };
             }
         });
+        console.log("trRef.current.node: ", trRef.current.nodes);
+        console.log("scaleRef.current: ", scaleRef.current);
+        console.log("e.currentTarget: ", e.currentTarget);
         //console.log("newImageState: ", newImageState);
         setSelectedImage(newImageState);
-        trRef.current.node(scaleRef.current);
+        trRef.current.nodes([e.currentTarget]);
         trRef.current.getLayer().batchDraw();
 
         //if (isSelected) {

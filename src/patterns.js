@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getPatterns } from "./actions";
 
 export default function Patterns(props) {
-    console.log("props in patterns: ", props);
+    //console.log("props in patterns: ", props);
     const dispatch = useDispatch();
 
     useEffect(() => {

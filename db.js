@@ -11,3 +11,10 @@ module.exports.getLager = () => {
 module.exports.getPatterns = () => {
     return db.query("SELECT * FROM patterns");
 };
+
+module.exports.addImage = (name, path) => {
+    let q = "INSERT INTO patterns (name, path) VALUES($1, $2)";
+    let params = [name, path];
+    console.log("params: ", params);
+    return db.query(q, params);
+};

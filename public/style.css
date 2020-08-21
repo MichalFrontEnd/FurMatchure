@@ -36,16 +36,19 @@ main {
 
 .swatches {
     height: 400px;
+    z-index: 5;
 }
 .ordering {
     display: flex;
     flex-direction: column;
     width: 20%;
+    z-index: 5;
 }
 
 button {
     width: 10em;
     align-self: center;
+    z-index: 5;
 }
 .pattern_menu {
     display: grid;

@@ -3,6 +3,7 @@ import { Stage, Layer, Text, Image, Transformer } from "react-konva";
 import { useDispatch, useSelector } from "react-redux";
 import { getLager, getPatterns } from "./actions";
 import Patterns from "./patterns";
+import Uploader from "./uploader";
 
 import { SwatchesPicker } from "react-color";
 
@@ -23,6 +24,8 @@ export default function Canvas() {
 
     let updateImage;
     let newImageState;
+    let stateCopy = [...selectedImage];
+    let uploadedImg;
 
     useEffect(() => {
         dispatch(getLager());
@@ -57,7 +60,7 @@ export default function Canvas() {
                 height: this.height,
                 transformerVis: false,
                 fill: "white",
-                patternImg: null,
+                //patternImg: null,
             },
         ]);
     }
@@ -109,6 +112,7 @@ export default function Canvas() {
         //still jumps on "release"...
         //updateImage.x = node.x;
         //updateImage.y = node.y;
+        console.log("node.scaleY: ", node.scaleY);
         node.image.height = node.image.height * node.scaleY;
         node.image.width = node.image.width * node.scaleX;
         //updateImage.fill = "blue";
@@ -177,6 +181,7 @@ export default function Canvas() {
                 return {
                     ...img,
                     fill: colour.hex,
+                    patternImg: null,
                 };
             } else {
                 return img;
@@ -209,31 +214,42 @@ export default function Canvas() {
 
         console.log("patternBg: ", patternBg);
     }
+    function getUploadedImage(ulimg) {
+        //if (ulimg) {}
+
+        //uploadedImg = ulimg;
+        //patternBg(uploadedImg);
+        console.log("ulimg: ", ulimg);
+    }
+
+    function removeItem() {
+        stateCopy.splice(isSelected, 1);
+        setSelectedImage(stateCopy);
+    }
 
     function changeOrder(e) {
-        const changeOrder = [...selectedImage];
-
         const button = e.currentTarget.name;
         //console.log("button: ", button);
-        const item = changeOrder.splice(isSelected, 1);
+        const item = stateCopy.splice(isSelected, 1);
 
         //console.log("item: ", item[0]);
 
         if (button === "movebottom") {
-            changeOrder.unshift(item[0]);
-            setSelectedImage(changeOrder);
+            stateCopy.unshift(item[0]);
+            setSelectedImage(stateCopy);
         } else if (button === "movetop") {
-            changeOrder.push(item[0]);
-            setSelectedImage(changeOrder);
+            stateCopy.push(item[0]);
+            setSelectedImage(stateCopy);
         } else if (button === "moveup") {
-            changeOrder.splice(isSelected + 1, 0, item[0]);
-            setSelectedImage(changeOrder);
+            stateCopy.splice(isSelected + 1, 0, item[0]);
+            setSelectedImage(stateCopy);
         } else if (button === "movedown") {
-            changeOrder.splice(isSelected - 1, 0, item[0]);
-            setSelectedImage(changeOrder);
+            stateCopy.splice(isSelected - 1, 0, item[0]);
+            setSelectedImage(stateCopy);
         }
-        //console.log("changOrder AFTER: ", changeOrder);
     }
+    console.log("changOrder AFTER: ", stateCopy);
+
     //console.log("selectedImage AFTER button click: ", selectedImage);
 
     return (
@@ -290,14 +306,14 @@ export default function Canvas() {
                                         updatePosition(i, e);
                                     }}
                                     ref={scaleRef}
-                                    onTransformEnd={(e) => {
+                                    onTransform={(e) => {
                                         updateSize(i, e);
                                     }}
                                     isSelected={i === isSelected}
                                     onSelect={() => {
                                         setIsSelected(i);
                                     }}
-                                    fillPatternImage={img.patternImg}
+                                    fillPatternImage={patternBg}
                                 />
                                 {i == isSelected && (
                                     <Transformer ref={trRef} key={i} />
@@ -314,11 +330,16 @@ export default function Canvas() {
                     onChange={pickColour}
                     colour={colour}
                 />
-                <Patterns
-                    pickPattern={(e) => {
-                        pickPattern(e);
-                    }}
-                />
+                <div className="pattern_menu">
+                    <h3>Choose a pattern:</h3>
+                    <Patterns
+                        pickPattern={(e) => {
+                            pickPattern(e);
+                        }}
+                    />
+                    <h3>Or upload your own pattern:</h3>
+                    <Uploader getUploadedImage={getUploadedImage} />
+                </div>
 
                 <div className="ordering">
                     <h3>Ordering</h3>
@@ -335,7 +356,7 @@ export default function Canvas() {
                         Move To Bottom
                     </button>
                 </div>
-                <button>Remove Item</button>
+                <button onClick={removeItem}>Remove Item</button>
             </div>
             {/*)}*/}
         </div>

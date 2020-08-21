@@ -1,5 +1,6 @@
-body {
+main {
     /*background-color: brown;*/
+    /*display: grid*/
 }
 
 /*#container {
@@ -22,6 +23,27 @@ body {
 
 .lager {
     display: inline-flex;
+}
+
+.edit_menu {
+    /*float: right;*/
+    height: 500px;
+    background-color: salmon;
+    width: 1200px;
+}
+
+.swatches {
+    height: 400px;
+}
+.ordering {
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+}
+
+.ordering button {
+    width: 10em;
+    align-self: center;
 }
 
 .item_img {

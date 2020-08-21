@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { Stage, Layer, Text, Image, Transformer } from "react-konva";
 import { useDispatch, useSelector } from "react-redux";
 import { getLager } from "./actions";
-//import Colors from "./colors";
+
 import { SwatchesPicker } from "react-color";
 
 //import Konva from "konva";
@@ -15,8 +15,9 @@ export default function Canvas() {
     const dispatch = useDispatch();
     const trRef = useRef(null);
     const [isSelected, setIsSelected] = useState(null);
-    const [toggleTransformer, setToggleTransformer] = useState(false);
-    const [color, setColor] = useState("#fff");
+    //const [toggleTransformer, setToggleTransformer] = useState(false);
+    const [colour, setColour] = useState("#fff");
+    const [menuVis, setMenuVis] = useState(false);
 
     let updateImage;
     let newImageState;
@@ -26,7 +27,10 @@ export default function Canvas() {
 
         //loadImage(url);
     }, []);
-    console.log("isSelected:", isSelected);
+
+    useEffect(() => {
+        console.log("selectedImage inside UE: ", selectedImage);
+    }, [selectedImage]);
     const lager = useSelector((state) => state.lager);
 
     function loadImage(src, name, id) {
@@ -98,9 +102,10 @@ export default function Canvas() {
         const node = e.target.attrs;
 
         updateImage = selectedImage[i];
-
-        updateImage.x = node.x;
-        updateImage.y = node.y;
+        //originally updated x and y as well. It made it jump..
+        //still jumps on "release"...
+        //updateImage.x = node.x;
+        //updateImage.y = node.y;
         node.image.height = node.image.height * node.scaleY;
         node.image.width = node.image.width * node.scaleX;
         //updateImage.fill = "blue";
@@ -117,17 +122,21 @@ export default function Canvas() {
         setSelectedImage(newImageState);
     }
 
-    function imgTransform(i, id, e) {
+    function editImg(i, e) {
         //console.log("i: ", i);
         e.cancelBubble = true;
-        setIsSelected(id);
-
-        //console.log("e.target==e.target.getImage(): ", e.target == Image());
-        setToggleTransformer(true);
-        const clickedOnEmpty = e.target === e.target.getStage();
-        if (clickedOnEmpty) {
-            //setIsSelected(null);
+        setIsSelected(i);
+        //Can't get toggle to work yet. tried isSelected >= 0 +/ !, typeOf e.currentTarget, i >= 0 / !i
+        //setting it to Stage clickhandler solved it
+        if (i >= 0) {
+            setMenuVis(true);
         }
+        //console.log("e.target==e.target.getImage(): ", e.target == Image());
+        //setToggleTransformer(true);
+        //const clickedOnEmpty = e.target === e.target.getStage();
+        //if (clickedOnEmpty) {
+        //    //setIsSelected(null);
+        //}
         //console.log("trRef: ", trRef);
 
         updateImage = selectedImage[i];
@@ -138,31 +147,68 @@ export default function Canvas() {
                 return { ...img, transformerVis: false };
             }
         });
-        console.log("trRef.current.node: ", trRef.current.nodes);
-        console.log("scaleRef.current: ", scaleRef.current);
-        console.log("e.currentTarget: ", e.currentTarget);
+        //console.log("trRef.current.node: ", trRef.current.nodes);
+        //console.log("scaleRef.current: ", scaleRef.current);
+        //console.log("e.currentTarget: ", e.currentTarget);
         //console.log("newImageState: ", newImageState);
         setSelectedImage(newImageState);
         trRef.current.nodes([e.currentTarget]);
         trRef.current.getLayer().batchDraw();
-
-        //if (isSelected) {
-        //    console.log("something");
-        //    //console.log("i: ", i);
-        //}
     }
     //console.log("toggleTransformer: ", toggleTransformer);
     //console.log("updateImage: ", updateImage);
     //console.log("selectedImage: ", selectedImage);
     console.log("isSelected: ", isSelected);
+    //console.log("menuVis: ", menuVis);
 
-    function pickColor(color) {
+    function pickColour(colour) {
         //console.log("something");
-        //console.log("color: ", color);
-        setColor(color.hex);
-        updateImage = isSelected;
+        //console.log("colour: ", colour);
+        setColour(colour.hex);
+        selectedImage[isSelected];
+        //updateImage = isSelected;
+
+        newImageState = selectedImage.map((img, idx) => {
+            //console.log("idx: ", idx);
+            if (idx == isSelected) {
+                return {
+                    ...img,
+                    fill: colour.hex,
+                };
+            } else {
+                return img;
+            }
+        });
+        setSelectedImage(newImageState);
+
+        //console.log("colour: ", colour);
     }
-    //console.log("color: ", color);
+
+    function changeOrder(e) {
+        const changeOrder = [...selectedImage];
+
+        const button = e.currentTarget.name;
+        console.log("button: ", button);
+        const item = changeOrder.splice(isSelected, 1);
+
+        console.log("item: ", item[0]);
+
+        if (button === "movebottom") {
+            changeOrder.unshift(item[0]);
+            setSelectedImage(changeOrder);
+        } else if (button === "movetop") {
+            changeOrder.push(item[0]);
+            setSelectedImage(changeOrder);
+        } else if (button === "moveup") {
+            changeOrder.splice(isSelected + 1, 0, item[0]);
+            setSelectedImage(changeOrder);
+        } else if (button === "movedown") {
+            changeOrder.splice(isSelected - 1, 0, item[0]);
+            setSelectedImage(changeOrder);
+        }
+        console.log("changOrder AFTER: ", changeOrder);
+    }
+    //console.log("selectedImage AFTER button click: ", selectedImage);
 
     return (
         <div id="test">
@@ -182,13 +228,40 @@ export default function Canvas() {
                         );
                     })}
             </div>
-
+            {menuVis && (
+                <div className="edit_menu">
+                    {/*<h1>menu Sanity check!</h1>*/}
+                    <SwatchesPicker
+                        className="swatches"
+                        onChange={pickColour}
+                        colour={colour}
+                    />
+                    <div className="ordering">
+                        <h3>Ordering</h3>
+                        <button onClick={changeOrder} name="moveup">
+                            Move Up
+                        </button>
+                        <button onClick={changeOrder} name="movedown">
+                            Move Down
+                        </button>
+                        <button onClick={changeOrder} name="movetop">
+                            Move To Top
+                        </button>
+                        <button onClick={changeOrder} name="movebottom">
+                            Move To Bottom
+                        </button>
+                    </div>
+                    <button>Remove Item</button>
+                </div>
+            )}
             <Stage
                 className="canvas"
                 width={parent.innerWidth}
                 height={parent.innerHeight}
                 onClick={() => {
-                    setIsSelected(null);
+                    {
+                        setIsSelected(null), setMenuVis(false);
+                    }
                 }}
             >
                 <Layer>
@@ -203,13 +276,13 @@ export default function Canvas() {
                             <Layer className="newlayer" key={i}>
                                 <Image
                                     onClick={(e) => {
-                                        imgTransform(i, img.image.id, e);
+                                        editImg(i, e);
                                     }}
                                     x={img.x}
                                     y={img.y}
                                     image={img.image}
                                     name={img.name}
-                                    id={img.image.id}
+                                    id={img.id}
                                     fill={img.fill}
                                     draggable
                                     onDragEnd={(e) => {
@@ -219,19 +292,18 @@ export default function Canvas() {
                                     onTransformEnd={(e) => {
                                         updateSize(i, e);
                                     }}
-                                    isSelected={img.image.id === isSelected}
+                                    isSelected={i === isSelected}
                                     onSelect={() => {
-                                        setIsSelected(img.image.id);
+                                        setIsSelected(i);
                                     }}
                                 />
-                                {img.image.id == isSelected && (
+                                {i == isSelected && (
                                     <Transformer ref={trRef} key={i} />
                                 )}
                             </Layer>
                         );
                     })}
             </Stage>
-            <SwatchesPicker onChange={pickColor} color={color} />
         </div>
     );
 }

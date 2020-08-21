@@ -30,6 +30,8 @@ main {
     height: 500px;
     background-color: salmon;
     width: 1200px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .swatches {
@@ -41,11 +43,16 @@ main {
     width: 20%;
 }
 
-.ordering button {
+button {
     width: 10em;
     align-self: center;
 }
-
+.pattern_menu {
+    display: grid;
+    width: 30%;
+    grid-template-columns: repeat(3, 1fr);
+    z-index: 5;
+}
 .item_img {
     height: 7em;
     width: 7em;

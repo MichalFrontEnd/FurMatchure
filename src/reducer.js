@@ -5,6 +5,13 @@ export default function reducer(state = {}, actions) {
             lager: actions.lager,
         };
     }
+    if (actions.type === "GET_PATTERNS") {
+        state = {
+            ...state,
+
+            patterns: actions.patterns,
+        };
+    }
     //console.log("state: ", state);
     return state;
 }

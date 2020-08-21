@@ -7,3 +7,7 @@ const db = spicedPg(
 module.exports.getLager = () => {
     return db.query("SELECT * FROM items");
 };
+
+module.exports.getPatterns = () => {
+    return db.query("SELECT * FROM patterns");
+};

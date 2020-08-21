@@ -21,7 +21,7 @@ if (process.env.NODE_ENV != "production") {
     app.use("/bundle.js", (req, res) => res.sendFile(`${__dirname}/bundle.js`));
 }
 
-app.get("/lagermenu", (req, res) => {
+app.get("/getlager", (req, res) => {
     //console.log("route working");
     db.getLager()
         .then(({ rows }) => {
@@ -30,6 +30,17 @@ app.get("/lagermenu", (req, res) => {
         })
         .catch((err) => {
             console.log("error in getLager", err);
+        });
+});
+app.get("/getpatterns", (req, res) => {
+    //console.log("route working");
+    db.getPatterns()
+        .then(({ rows }) => {
+            //console.log("rows in getLager: ", rows);
+            res.json({ rows });
+        })
+        .catch((err) => {
+            console.log("error in getPatterns", err);
         });
 });
 

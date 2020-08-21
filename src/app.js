@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Stage, Layer, Text, Image, Transformer } from "react-konva";
 import { useDispatch, useSelector } from "react-redux";
-import { getLager } from "./actions";
+import { getLager, getPatterns } from "./actions";
+import Patterns from "./patterns";
 
 import { SwatchesPicker } from "react-color";
 
 //import Konva from "konva";
 
 export default function Canvas() {
-    //i set it to an array so the user could choose multiple pieces of furniture
+    //I set it to an array so the user could choose multiple pieces of furniture
     const [selectedImage, setSelectedImage] = useState([]);
     const imageRef = useRef(null);
     const scaleRef = useRef(null);
@@ -17,7 +18,8 @@ export default function Canvas() {
     const [isSelected, setIsSelected] = useState(null);
     //const [toggleTransformer, setToggleTransformer] = useState(false);
     const [colour, setColour] = useState("#fff");
-    const [menuVis, setMenuVis] = useState(false);
+    const [menuVis, setMenuVis] = useState(true);
+    const [patternBg, setPatternBg] = useState(null);
 
     let updateImage;
     let newImageState;
@@ -28,9 +30,9 @@ export default function Canvas() {
         //loadImage(url);
     }, []);
 
-    useEffect(() => {
-        console.log("selectedImage inside UE: ", selectedImage);
-    }, [selectedImage]);
+    //useEffect(() => {
+    //    console.log("selectedImage inside UE: ", selectedImage);
+    //}, [selectedImage]);
     const lager = useSelector((state) => state.lager);
 
     function loadImage(src, name, id) {
@@ -55,6 +57,7 @@ export default function Canvas() {
                 height: this.height,
                 transformerVis: false,
                 fill: "white",
+                patternImg: null,
             },
         ]);
     }
@@ -183,15 +186,38 @@ export default function Canvas() {
 
         //console.log("colour: ", colour);
     }
+    function pickPattern(e) {
+        console.log("click handler sanity check");
+        console.log("e.target in pickPattern: ", e.target);
+        setMenuVis(true);
+        setPatternBg(e.target);
+        selectedImage[isSelected];
+
+        newImageState = selectedImage.map((img, idx) => {
+            //console.log("idx: ", idx);
+            if (idx == isSelected) {
+                return {
+                    ...img,
+                    fill: null,
+                    patternImg: patternBg,
+                };
+            } else {
+                return img;
+            }
+        });
+        setSelectedImage(newImageState);
+
+        console.log("patternBg: ", patternBg);
+    }
 
     function changeOrder(e) {
         const changeOrder = [...selectedImage];
 
         const button = e.currentTarget.name;
-        console.log("button: ", button);
+        //console.log("button: ", button);
         const item = changeOrder.splice(isSelected, 1);
 
-        console.log("item: ", item[0]);
+        //console.log("item: ", item[0]);
 
         if (button === "movebottom") {
             changeOrder.unshift(item[0]);
@@ -206,7 +232,7 @@ export default function Canvas() {
             changeOrder.splice(isSelected - 1, 0, item[0]);
             setSelectedImage(changeOrder);
         }
-        console.log("changOrder AFTER: ", changeOrder);
+        //console.log("changOrder AFTER: ", changeOrder);
     }
     //console.log("selectedImage AFTER button click: ", selectedImage);
 
@@ -228,32 +254,7 @@ export default function Canvas() {
                         );
                     })}
             </div>
-            {menuVis && (
-                <div className="edit_menu">
-                    {/*<h1>menu Sanity check!</h1>*/}
-                    <SwatchesPicker
-                        className="swatches"
-                        onChange={pickColour}
-                        colour={colour}
-                    />
-                    <div className="ordering">
-                        <h3>Ordering</h3>
-                        <button onClick={changeOrder} name="moveup">
-                            Move Up
-                        </button>
-                        <button onClick={changeOrder} name="movedown">
-                            Move Down
-                        </button>
-                        <button onClick={changeOrder} name="movetop">
-                            Move To Top
-                        </button>
-                        <button onClick={changeOrder} name="movebottom">
-                            Move To Bottom
-                        </button>
-                    </div>
-                    <button>Remove Item</button>
-                </div>
-            )}
+
             <Stage
                 className="canvas"
                 width={parent.innerWidth}
@@ -296,6 +297,7 @@ export default function Canvas() {
                                     onSelect={() => {
                                         setIsSelected(i);
                                     }}
+                                    fillPatternImage={img.patternImg}
                                 />
                                 {i == isSelected && (
                                     <Transformer ref={trRef} key={i} />
@@ -304,6 +306,38 @@ export default function Canvas() {
                         );
                     })}
             </Stage>
+            {/*{menuVis && (*/}
+            <div className="edit_menu">
+                {/*<h1>menu Sanity check!</h1>*/}
+                <SwatchesPicker
+                    className="swatches"
+                    onChange={pickColour}
+                    colour={colour}
+                />
+                <Patterns
+                    pickPattern={(e) => {
+                        pickPattern(e);
+                    }}
+                />
+
+                <div className="ordering">
+                    <h3>Ordering</h3>
+                    <button onClick={changeOrder} name="moveup">
+                        Move Up
+                    </button>
+                    <button onClick={changeOrder} name="movedown">
+                        Move Down
+                    </button>
+                    <button onClick={changeOrder} name="movetop">
+                        Move To Top
+                    </button>
+                    <button onClick={changeOrder} name="movebottom">
+                        Move To Bottom
+                    </button>
+                </div>
+                <button>Remove Item</button>
+            </div>
+            {/*)}*/}
         </div>
     );
 }

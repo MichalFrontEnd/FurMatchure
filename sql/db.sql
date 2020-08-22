@@ -15,8 +15,8 @@ CREATE TABLE items (
 
 CREATE TABLE patterns(
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255),
-    path VARCHAR(255),
+    name VARCHAR(255) NOT NULL,
+    path VARCHAR(255) NOT NULL,
     category VARCHAR NOT NULL
 );
 

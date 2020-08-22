@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Stage, Layer, Text, Image, Transformer } from "react-konva";
 import { useDispatch, useSelector } from "react-redux";
-import { getLager, getPatterns } from "./actions";
+import { getLager } from "./actions";
 import Patterns from "./patterns";
 import Uploader from "./uploader";
 
@@ -25,7 +25,6 @@ export default function Canvas() {
     let updateImage;
     let newImageState;
     let stateCopy = [...selectedImage];
-    let uploadedImg;
 
     useEffect(() => {
         dispatch(getLager());
@@ -60,7 +59,6 @@ export default function Canvas() {
                 height: this.height,
                 transformerVis: false,
                 fill: "white",
-                //patternImg: null,
             },
         ]);
     }
@@ -112,7 +110,6 @@ export default function Canvas() {
         //still jumps on "release"...
         //updateImage.x = node.x;
         //updateImage.y = node.y;
-        console.log("node.scaleY: ", node.scaleY);
         node.image.height = node.image.height * node.scaleY;
         node.image.width = node.image.width * node.scaleX;
         //updateImage.fill = "blue";
@@ -165,7 +162,7 @@ export default function Canvas() {
     //console.log("toggleTransformer: ", toggleTransformer);
     //console.log("updateImage: ", updateImage);
     //console.log("selectedImage: ", selectedImage);
-    console.log("isSelected: ", isSelected);
+    //console.log("isSelected: ", isSelected);
     //console.log("menuVis: ", menuVis);
 
     function pickColour(colour) {
@@ -192,8 +189,6 @@ export default function Canvas() {
         //console.log("colour: ", colour);
     }
     function pickPattern(e) {
-        console.log("click handler sanity check");
-        console.log("e.target in pickPattern: ", e.target);
         setMenuVis(true);
         setPatternBg(e.target);
         selectedImage[isSelected];
@@ -211,15 +206,6 @@ export default function Canvas() {
             }
         });
         setSelectedImage(newImageState);
-
-        console.log("patternBg: ", patternBg);
-    }
-    function getUploadedImage(ulimg) {
-        //if (ulimg) {}
-
-        //uploadedImg = ulimg;
-        //patternBg(uploadedImg);
-        console.log("ulimg: ", ulimg);
     }
 
     function removeItem() {
@@ -248,7 +234,6 @@ export default function Canvas() {
             setSelectedImage(stateCopy);
         }
     }
-    console.log("changOrder AFTER: ", stateCopy);
 
     //console.log("selectedImage AFTER button click: ", selectedImage);
 
@@ -338,7 +323,7 @@ export default function Canvas() {
                         }}
                     />
                     <h3>Or upload your own pattern:</h3>
-                    <Uploader getUploadedImage={getUploadedImage} />
+                    <Uploader />
                 </div>
 
                 <div className="ordering">

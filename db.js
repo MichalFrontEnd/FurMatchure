@@ -9,12 +9,12 @@ module.exports.getLager = () => {
 };
 
 module.exports.getPatterns = () => {
-    return db.query("SELECT * FROM patterns");
+    return db.query("SELECT * FROM patterns ORDER BY id DESC");
 };
 
-module.exports.addImage = (name, path) => {
-    let q = "INSERT INTO patterns (name, path) VALUES($1, $2)";
-    let params = [name, path];
-    console.log("params: ", params);
+module.exports.addImage = (name, path, category) => {
+    let q = "INSERT INTO patterns (name, path, category) VALUES($1, $2, $3)";
+    let params = [name, path, category];
+    //console.log("params: ", params);
     return db.query(q, params);
 };

@@ -52,9 +52,10 @@ button {
 }
 .pattern_menu {
     display: grid;
-    width: 30%;
+    width: 50%;
     grid-template-columns: repeat(3, 1fr);
     z-index: 5;
+    /*overflow-y: scroll;*/
 }
 .item_img {
     height: 7em;

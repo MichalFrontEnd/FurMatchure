@@ -14,6 +14,7 @@ export default function Canvas() {
     const [selectedImage, setSelectedImage] = useState([]);
     const imageRef = useRef(null);
     const scaleRef = useRef(null);
+    const containerRef = useRef(null);
     const dispatch = useDispatch();
     const trRef = useRef(null);
     const [isSelected, setIsSelected] = useState(null);
@@ -21,6 +22,10 @@ export default function Canvas() {
     const [colour, setColour] = useState("#fff");
     const [menuVis, setMenuVis] = useState(true);
     const [patternBg, setPatternBg] = useState(null);
+    const [stageHeight, setStageHeight] = useState(600);
+    const [stageWidth, setStageWidth] = useState(1000);
+    const [containerWidth, setContainerWidth] = useState(null);
+    const [containerHeight, setContainerHeight] = useState(null);
 
     let updateImage;
     let newImageState;
@@ -28,13 +33,15 @@ export default function Canvas() {
 
     useEffect(() => {
         dispatch(getLager());
+        setContainerHeight(containerRef.current.clientHeight);
+        setContainerWidth(containerRef.current.clientWidth);
+        //console.log("containerRef: ", containerRef.current.clientHeight);
 
         //loadImage(url);
-    }, []);
-
-    //useEffect(() => {
-    //    console.log("selectedImage inside UE: ", selectedImage);
-    //}, [selectedImage]);
+    }, [containerWidth]);
+    useEffect(() => {
+        responsiveStage();
+    }, [stageWidth]);
     const lager = useSelector((state) => state.lager);
 
     function loadImage(src, name, id) {
@@ -235,99 +242,122 @@ export default function Canvas() {
         }
     }
 
+    function responsiveStage() {
+        const containerWidth = containerRef.current.clientWidth;
+        const containerHeight = containerRef.current.clientHeight;
+
+        const scaleX = containerWidth / stageWidth;
+        const scaleY = containerHeight / stageHeight;
+        console.log("containerWidth: ", containerWidth);
+        console.log("containerHeight: ", containerHeight);
+        console.log("CanvasWidth: ", stageWidth);
+        console.log("CanvasWidth: ", stageHeight);
+        //console.log("scale: ", scale);
+        setStageWidth(stageWidth * scaleX);
+        setStageHeight(stageHeight * scaleY);
+    }
     //console.log("selectedImage AFTER button click: ", selectedImage);
 
     return (
-        <div id="test">
-            <div className="lager">
-                {lager &&
-                    lager.map((item, i) => {
-                        return (
-                            <div className="item" key={i}>
-                                <img
-                                    className="item_img"
-                                    src={item.path}
-                                    name={item.name}
-                                    id={item.id}
-                                    onClick={(e) => getImage(e)}
-                                />
-                            </div>
-                        );
-                    })}
+        <div className="container">
+            <div className="furniture_menu">
+                <h3 className="menu_header">Category</h3>
+                <div className="lager">
+                    {lager &&
+                        lager.map((item, i) => {
+                            return (
+                                <div className="item" key={i}>
+                                    <img
+                                        className="item_img"
+                                        src={item.path}
+                                        name={item.name}
+                                        id={item.id}
+                                        onClick={(e) => getImage(e)}
+                                    />
+                                </div>
+                            );
+                        })}
+                </div>
             </div>
-
-            <Stage
-                className="canvas"
-                width={parent.innerWidth}
-                height={parent.innerHeight}
-                onClick={() => {
-                    {
-                        setIsSelected(null), setMenuVis(false);
-                    }
-                }}
-            >
-                <Layer>
-                    <Text
-                        text="Click on an image to load it on the canvas!"
-                        fontSize={26}
-                    />
-                </Layer>
-                {selectedImage &&
-                    selectedImage.map((img, i) => {
-                        return (
-                            <Layer className="newlayer" key={i}>
-                                <Image
-                                    onClick={(e) => {
-                                        editImg(i, e);
-                                    }}
-                                    x={img.x}
-                                    y={img.y}
-                                    image={img.image}
-                                    name={img.name}
-                                    id={img.id}
-                                    fill={img.fill}
-                                    draggable
-                                    onDragEnd={(e) => {
-                                        updatePosition(i, e);
-                                    }}
-                                    ref={scaleRef}
-                                    onTransform={(e) => {
-                                        updateSize(i, e);
-                                    }}
-                                    isSelected={i === isSelected}
-                                    onSelect={() => {
-                                        setIsSelected(i);
-                                    }}
-                                    fillPatternImage={patternBg}
-                                />
-                                {i == isSelected && (
-                                    <Transformer ref={trRef} key={i} />
-                                )}
-                            </Layer>
-                        );
-                    })}
-            </Stage>
+            <div className="canvas_container" ref={containerRef}>
+                <Stage
+                    //className="canvas"
+                    width={stageWidth}
+                    height={stageHeight}
+                    onClick={() => {
+                        {
+                            setIsSelected(null), setMenuVis(false);
+                        }
+                    }}
+                >
+                    <Layer>
+                        <Text
+                            text="Click on an image to load it on the canvas!"
+                            fontSize={26}
+                        />
+                    </Layer>
+                    {selectedImage &&
+                        selectedImage.map((img, i) => {
+                            return (
+                                <Layer key={i}>
+                                    <Image
+                                        onClick={(e) => {
+                                            editImg(i, e);
+                                        }}
+                                        x={img.x}
+                                        y={img.y}
+                                        image={img.image}
+                                        name={img.name}
+                                        id={img.id}
+                                        fill={img.fill}
+                                        draggable
+                                        onDragEnd={(e) => {
+                                            updatePosition(i, e);
+                                        }}
+                                        ref={scaleRef}
+                                        onTransform={(e) => {
+                                            updateSize(i, e);
+                                        }}
+                                        isSelected={i === isSelected}
+                                        onSelect={() => {
+                                            setIsSelected(i);
+                                        }}
+                                        fillPatternImage={patternBg}
+                                    />
+                                    {i == isSelected && (
+                                        <Transformer ref={trRef} key={i} />
+                                    )}
+                                </Layer>
+                            );
+                        })}
+                </Stage>
+            </div>
             {/*{menuVis && (*/}
-            <div className="edit_menu">
+            <div className="fill_menu">
                 {/*<h1>menu Sanity check!</h1>*/}
+                <h3 className="menu_header">choose a fill color:</h3>
                 <SwatchesPicker
                     className="swatches"
                     onChange={pickColour}
                     colour={colour}
                 />
-                <div className="pattern_menu">
-                    <h3>Choose a pattern:</h3>
-                    <Patterns
-                        pickPattern={(e) => {
-                            pickPattern(e);
-                        }}
-                    />
-                    <h3>Or upload your own pattern:</h3>
-                    <Uploader />
-                </div>
 
+                <h3 className="menu_header">
+                    Or <br></br>choose a pattern:
+                </h3>
+                <Patterns
+                    pickPattern={(e) => {
+                        pickPattern(e);
+                    }}
+                />
+                <h3 className="menu_header">
+                    Or<br></br> upload your own pattern!
+                </h3>
+                <Uploader />
+            </div>
+            <div className="toolkit">
                 <div className="ordering">
-                    <h3>Ordering</h3>
+                    <h3>Change Ordering</h3>
                     <button onClick={changeOrder} name="moveup">
                         Move Up
                     </button>

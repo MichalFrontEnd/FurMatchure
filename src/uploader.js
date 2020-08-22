@@ -73,7 +73,7 @@ export default function Uploader() {
             />
 
             <button onClick={photoUpload}>Upload photo</button>
-            <span>*Must be under 2MB</span>
+            <p>*Must be under 2MB</p>
         </div>
     );
 }

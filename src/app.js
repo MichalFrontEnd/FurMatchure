@@ -66,6 +66,7 @@ export default function Canvas() {
                 height: this.height,
                 transformerVis: false,
                 fill: "white",
+                fillPatternImage: null,
             },
         ]);
     }
@@ -169,7 +170,8 @@ export default function Canvas() {
     //console.log("toggleTransformer: ", toggleTransformer);
     //console.log("updateImage: ", updateImage);
     //console.log("selectedImage: ", selectedImage);
-    //console.log("isSelected: ", isSelected);
+    console.log("isSelected: ", isSelected);
+    //console.log("patternBg: ", patternBg);
     //console.log("menuVis: ", menuVis);
 
     function pickColour(colour) {
@@ -185,7 +187,7 @@ export default function Canvas() {
                 return {
                     ...img,
                     fill: colour.hex,
-                    patternImg: null,
+                    //patternImg: null,
                 };
             } else {
                 return img;
@@ -198,10 +200,12 @@ export default function Canvas() {
     function pickPattern(e) {
         setMenuVis(true);
         setPatternBg(e.target);
+
         selectedImage[isSelected];
 
         newImageState = selectedImage.map((img, idx) => {
             //console.log("idx: ", idx);
+            console.log("idx: ", idx === isSelected);
             if (idx == isSelected) {
                 return {
                     ...img,
@@ -248,10 +252,10 @@ export default function Canvas() {
 
         const scaleX = containerWidth / stageWidth;
         const scaleY = containerHeight / stageHeight;
-        console.log("containerWidth: ", containerWidth);
-        console.log("containerHeight: ", containerHeight);
-        console.log("CanvasWidth: ", stageWidth);
-        console.log("CanvasWidth: ", stageHeight);
+        //console.log("containerWidth: ", containerWidth);
+        //console.log("containerHeight: ", containerHeight);
+        //console.log("CanvasWidth: ", stageWidth);
+        //console.log("CanvasWidth: ", stageHeight);
         //console.log("scale: ", scale);
         setStageWidth(stageWidth * scaleX);
         setStageHeight(stageHeight * scaleY);

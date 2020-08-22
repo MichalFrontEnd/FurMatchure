@@ -32,6 +32,7 @@ main {
     /*background-color: slateblue;*/
     /*grid-area: canvas;*/
     grid-area: 2 / 2 / span 1 / span 1;
+    /*background-image: url(/images/Patterns/plaid1.jpg);*/
 }
 
 .furniture_menu,
@@ -94,6 +95,7 @@ button {
     overflow-y: auto;
     align-self: center;
     margin-bottom: 3em;
+    gap: 0.25em;
 
     /*overflow-y: scroll;*/
 }

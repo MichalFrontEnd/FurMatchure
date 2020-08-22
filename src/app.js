@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Stage, Layer, Text, Image, Transformer } from "react-konva";
-import { useDispatch, useSelector } from "react-redux";
-import { getLager } from "./actions";
 import Patterns from "./patterns";
 import Uploader from "./uploader";
+import Lager from "./lager";
 
 import { SwatchesPicker } from "react-color";
 
@@ -15,12 +14,11 @@ export default function Canvas() {
     const imageRef = useRef(null);
     const scaleRef = useRef(null);
     const containerRef = useRef(null);
-    const dispatch = useDispatch();
     const trRef = useRef(null);
     const [isSelected, setIsSelected] = useState(null);
     //const [toggleTransformer, setToggleTransformer] = useState(false);
     const [colour, setColour] = useState("#fff");
-    const [menuVis, setMenuVis] = useState(true);
+    const [menuVis, setMenuVis] = useState(false);
     const [patternBg, setPatternBg] = useState(null);
     const [stageHeight, setStageHeight] = useState(600);
     const [stageWidth, setStageWidth] = useState(1000);
@@ -32,7 +30,6 @@ export default function Canvas() {
     let stateCopy = [...selectedImage];
 
     useEffect(() => {
-        dispatch(getLager());
         setContainerHeight(containerRef.current.clientHeight);
         setContainerWidth(containerRef.current.clientWidth);
         //console.log("containerRef: ", containerRef.current.clientHeight);
@@ -42,7 +39,6 @@ export default function Canvas() {
     useEffect(() => {
         responsiveStage();
     }, [stageWidth]);
-    const lager = useSelector((state) => state.lager);
 
     function loadImage(src, name, id) {
         const img = new window.Image();
@@ -170,7 +166,7 @@ export default function Canvas() {
     //console.log("toggleTransformer: ", toggleTransformer);
     //console.log("updateImage: ", updateImage);
     //console.log("selectedImage: ", selectedImage);
-    console.log("isSelected: ", isSelected);
+    //console.log("isSelected: ", isSelected);
     //console.log("patternBg: ", patternBg);
     //console.log("menuVis: ", menuVis);
 
@@ -199,7 +195,6 @@ export default function Canvas() {
     }
     function pickPattern(e) {
         setMenuVis(true);
-        setPatternBg(e.target);
 
         selectedImage[isSelected];
 
@@ -207,10 +202,11 @@ export default function Canvas() {
             //console.log("idx: ", idx);
             console.log("idx: ", idx === isSelected);
             if (idx == isSelected) {
+                setPatternBg(e.target);
                 return {
                     ...img,
                     fill: null,
-                    patternImg: patternBg,
+                    fillPatternImage: patternBg,
                 };
             } else {
                 return img;
@@ -264,25 +260,7 @@ export default function Canvas() {
 
     return (
         <div className="container">
-            <div className="furniture_menu">
-                <h3 className="menu_header">Category</h3>
-                <div className="lager">
-                    {lager &&
-                        lager.map((item, i) => {
-                            return (
-                                <div className="item" key={i}>
-                                    <img
-                                        className="item_img"
-                                        src={item.path}
-                                        name={item.name}
-                                        id={item.id}
-                                        onClick={(e) => getImage(e)}
-                                    />
-                                </div>
-                            );
-                        })}
-                </div>
-            </div>
+            <Lager getImage={getImage} />
             <div className="canvas_container" ref={containerRef}>
                 <Stage
                     //className="canvas"
@@ -326,7 +304,7 @@ export default function Canvas() {
                                         onSelect={() => {
                                             setIsSelected(i);
                                         }}
-                                        fillPatternImage={patternBg}
+                                        fillPatternImage={img.fillPatternImage}
                                     />
                                     {i == isSelected && (
                                         <Transformer ref={trRef} key={i} />
@@ -336,7 +314,6 @@ export default function Canvas() {
                         })}
                 </Stage>
             </div>
-            {/*{menuVis && (*/}
             <div className="fill_menu">
                 {/*<h1>menu Sanity check!</h1>*/}
                 <h3 className="menu_header">choose a fill color:</h3>
@@ -359,25 +336,26 @@ export default function Canvas() {
                 </h3>
                 <Uploader />
             </div>
-            <div className="toolkit">
-                <div className="ordering">
-                    <h3>Change Ordering</h3>
-                    <button onClick={changeOrder} name="moveup">
-                        Move Up
-                    </button>
-                    <button onClick={changeOrder} name="movedown">
-                        Move Down
-                    </button>
-                    <button onClick={changeOrder} name="movetop">
-                        Move To Top
-                    </button>
-                    <button onClick={changeOrder} name="movebottom">
-                        Move To Bottom
-                    </button>
+            {menuVis && (
+                <div className="toolkit">
+                    <div className="ordering">
+                        <h3>Change Ordering</h3>
+                        <button onClick={changeOrder} name="moveup">
+                            Move Up
+                        </button>
+                        <button onClick={changeOrder} name="movedown">
+                            Move Down
+                        </button>
+                        <button onClick={changeOrder} name="movetop">
+                            Move To Top
+                        </button>
+                        <button onClick={changeOrder} name="movebottom">
+                            Move To Bottom
+                        </button>
+                    </div>
+                    <button onClick={removeItem}>Remove Item</button>
                 </div>
-                <button onClick={removeItem}>Remove Item</button>
-            </div>
-            {/*)}*/}
+            )}
         </div>
     );
 }

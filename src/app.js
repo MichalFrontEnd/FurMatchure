@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
+import Konva from "konva";
 import { Stage, Layer, Text, Image, Transformer } from "react-konva";
 import Patterns from "./patterns";
 import Uploader from "./uploader";
 import Lager from "./lager";
 
 import { SwatchesPicker } from "react-color";
+import FormButtons from "./formbuttons";
 
 //import Konva from "konva";
 
@@ -13,6 +15,7 @@ export default function Canvas() {
     const [selectedImage, setSelectedImage] = useState([]);
     const imageRef = useRef(null);
     const scaleRef = useRef(null);
+    const stageRef = useRef(null);
     const containerRef = useRef(null);
     const trRef = useRef(null);
     const [isSelected, setIsSelected] = useState(null);
@@ -169,11 +172,28 @@ export default function Canvas() {
     //console.log("isSelected: ", isSelected);
     //console.log("patternBg: ", patternBg);
     //console.log("menuVis: ", menuVis);
-
+    console.log("colour: ", colour);
+    function randomColour() {
+        setColour(Konva.Util.getRandomColor());
+        selectedImage[isSelected];
+        newImageState = selectedImage.map((img, idx) => {
+            //console.log("idx: ", idx);
+            if (idx == isSelected) {
+                return {
+                    ...img,
+                    fill: colour,
+                    //patternImg: null,
+                };
+            } else {
+                return img;
+            }
+        });
+        setSelectedImage(newImageState);
+    }
     function pickColour(colour) {
         //console.log("something");
         //console.log("colour: ", colour);
-        setColour(colour.hex);
+        //setColour(colour.hex);
         selectedImage[isSelected];
         //updateImage = isSelected;
 
@@ -263,6 +283,7 @@ export default function Canvas() {
             <Lager getImage={getImage} />
             <div className="canvas_container" ref={containerRef}>
                 <Stage
+                    ref={stageRef}
                     //className="canvas"
                     width={stageWidth}
                     height={stageHeight}
@@ -273,10 +294,10 @@ export default function Canvas() {
                     }}
                 >
                     <Layer>
-                        <Text
+                        {/*<Text
                             text="Click on an image to load it on the canvas!"
                             fontSize={26}
-                        />
+                        />*/}
                     </Layer>
                     {selectedImage &&
                         selectedImage.map((img, i) => {
@@ -322,7 +343,7 @@ export default function Canvas() {
                     onChange={pickColour}
                     colour={colour}
                 />
-
+                <button onClick={randomColour}>Random Colour</button>
                 <h3 className="menu_header">
                     Or <br></br>choose a pattern:
                 </h3>
@@ -356,6 +377,7 @@ export default function Canvas() {
                     <button onClick={removeItem}>Remove Item</button>
                 </div>
             )}
+            <FormButtons stageRef={stageRef} />
         </div>
     );
 }

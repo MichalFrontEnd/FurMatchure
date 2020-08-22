@@ -9,6 +9,11 @@ export default function Patterns(props) {
     useEffect(() => {
         dispatch(getPatterns());
     }, []);
+    //const sofas = useSelector(
+    //    (state) =>
+    //        state.lager &&
+    //        state.lager.filter((category) => category.category == "sofas")
+    //);
     const patterns = useSelector((state) => state.patterns);
 
     return (

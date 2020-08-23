@@ -4,7 +4,7 @@ import { Stage, Layer, Text, Image, Transformer } from "react-konva";
 import Patterns from "./patterns";
 import Uploader from "./uploader";
 import Lager from "./lager";
-
+import { TextForm } from "./textform";
 import { SwatchesPicker } from "react-color";
 import FormButtons from "./formbuttons";
 
@@ -27,6 +27,8 @@ export default function Canvas() {
     const [stageWidth, setStageWidth] = useState(1000);
     const [containerWidth, setContainerWidth] = useState(null);
     const [containerHeight, setContainerHeight] = useState(null);
+    const [customFilter, setCustomFilter] = useState(null);
+    const [text, setText] = useState([]);
 
     let updateImage;
     let newImageState;
@@ -51,7 +53,7 @@ export default function Canvas() {
         img.crossOrigin = "Anonymous";
         imageRef.current = img;
         imageRef.current.addEventListener("load", handleLoad);
-        //console.log("img: ", img);
+        console.log("img: ", img);
     }
 
     function handleLoad() {
@@ -66,8 +68,33 @@ export default function Canvas() {
                 transformerVis: false,
                 fill: "white",
                 fillPatternImage: null,
+                //filters: makeOpaque,
             },
         ]);
+
+        //function makeOpaque(imageData) {
+        //    imageData = new ImageData(
+        //        imageRef.current.width,
+        //        imageRef.current.height
+        //    );
+        //    //console.log("imageData: ", imageData);
+        //    console.log("selectedImage.width: ", imageRef.current.width);
+        //    console.log("imageData.data: ", imageData.data);
+        //    let nPixels = imageData.data.length;
+        //    for (var i = 0; i < nPixels; i++) {
+        //        if (imageData.data[i] > 0) {
+        //            imageData.data[i] = 0;
+        //        }
+        //    }
+        //    console.log("imageData.data: ", imageData.data);
+        //}
+        //makeOpaque(imageRef);
+        ////setCustomFilter(makeOpaque);
+        //console.log("customFilter: ", customFilter);
+
+        //makeOpaque(imageRef.current);
+        //background: rgba(255, 255, 255, 0);
+        //[r1, g1, b1, a1, r2, g2, b2, a2, ...]
     }
 
     function getImage(e) {
@@ -172,7 +199,7 @@ export default function Canvas() {
     //console.log("isSelected: ", isSelected);
     //console.log("patternBg: ", patternBg);
     //console.log("menuVis: ", menuVis);
-    console.log("colour: ", colour);
+    //console.log("colour: ", colour);
     function randomColour() {
         setColour(Konva.Util.getRandomColor());
         selectedImage[isSelected];
@@ -220,7 +247,7 @@ export default function Canvas() {
 
         newImageState = selectedImage.map((img, idx) => {
             //console.log("idx: ", idx);
-            console.log("idx: ", idx === isSelected);
+            //console.log("idx: ", idx === isSelected);
             if (idx == isSelected) {
                 setPatternBg(e.target);
                 return {
@@ -276,8 +303,44 @@ export default function Canvas() {
         setStageWidth(stageWidth * scaleX);
         setStageHeight(stageHeight * scaleY);
     }
+
+    //Looks like I need to map and maybe also insert to state. WIll leave that for later..
+    //function textInfo() {
+    //    //selectedImage.map((img, i) => {
+    //    //    return {
+    //    //        name: img.name,
+    //    //        color: img.fill,
+    //    //    };
+    //    //});
+    //    for (let i = 0; i < selectedImage.length; i++) {
+    //        //console.log("i: ", selectedImage[i]);
+    //        //console.log("i.name: ", selectedImage[i].image.name);
+    //        console.log("i.fill: ", selectedImage.fill);
+    //        //console.log("i.pattern: ", selectedImage[i].fillPatternImage.name);
+    //        //console.log("i.fill: ", selectedImage[i].image.fill);
+    //        let info = {
+    //            name: selectedImage[i].image.name,
+    //            x: selectedImage[i].x,
+    //            y: selectedImage[i].y - 100,
+    //        };
+    //        if (selectedImage[i].fill) {
+    //            info = { ...info, fill: selectedImage[i].fill };
+    //        }
+    //        if (selectedImage[i].fillPatternImage) {
+    //            info = {
+    //                ...info,
+    //                pattern: selectedImage[i].fillPatternImage.name,
+    //            };
+    //        }
+    //        console.log("info: ", info);
+    //        setText([...text, info]);
+    //    }
+    //}
+
+    //textInfo();
     //console.log("selectedImage AFTER button click: ", selectedImage);
 
+    console.log("text: ", text);
     return (
         <div className="container">
             <Lager getImage={getImage} />
@@ -326,6 +389,7 @@ export default function Canvas() {
                                             setIsSelected(i);
                                         }}
                                         fillPatternImage={img.fillPatternImage}
+                                        //filters={img.filters}
                                     />
                                     {i == isSelected && (
                                         <Transformer ref={trRef} key={i} />
@@ -333,6 +397,22 @@ export default function Canvas() {
                                 </Layer>
                             );
                         })}
+                    {/*{text &&
+                        text.map((img, i) => {
+                            return (
+                                <Layer key={i}>
+                                    <Text
+                                        text={`
+                                        ${img.name}
+                                        ${img.fill}`}
+                                        fontSize={15}
+                                        x={img.x}
+                                        y={img.y - 100}
+                                        fill={"black"}
+                                    ></Text>
+                                </Layer>
+                            );
+                        })}*/}
                 </Stage>
             </div>
             <div className="fill_menu">
@@ -377,7 +457,11 @@ export default function Canvas() {
                     <button onClick={removeItem}>Remove Item</button>
                 </div>
             )}
-            <FormButtons stageRef={stageRef} />
+            <FormButtons
+                stageRef={stageRef}
+                patternBg={patternBg}
+                //textInfo={textInfo}
+            />
         </div>
     );
 }

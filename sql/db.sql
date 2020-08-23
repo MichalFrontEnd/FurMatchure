@@ -13,10 +13,20 @@ CREATE TABLE items (
     category VARCHAR(255)
 );
 
+DROP TABLE IF EXISTS patterns CASCADE;
 CREATE TABLE patterns(
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     path VARCHAR(255) NOT NULL,
     category VARCHAR NOT NULL
+);
+
+DROP TABLE IF EXISTS temp CASCADE;
+CREATE TABLE temp(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    path VARCHAR(255) NOT NULL,
+    category VARCHAR NOT NULL
+    --FOREIGN KEY (id) REFERENCES patterns (id)
 );
 

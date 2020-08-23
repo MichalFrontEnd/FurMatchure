@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { getPatterns } from "./actions";
+import { getPatterns, addPattern } from "./actions";
 import { useDispatch } from "react-redux";
 
 export default function Uploader() {
@@ -8,8 +8,13 @@ export default function Uploader() {
     const [uploadedImg, setUploadedImg] = useState(null);
     const [imgName, setImgName] = useState("");
     const [imgCat, setImgCat] = useState("pattern type");
+    const [ulError, setUlError] = useState(false);
+    const [modalVis, setModalVis] = useState(false);
 
+    //console.log(" error: ", ulError);
     function photoUpload(e) {
+        //console.log("e.target.name: ", );
+        const button = e.target.name;
         e.preventDefault();
         let fd = new FormData();
 
@@ -18,25 +23,41 @@ export default function Uploader() {
         fd.append("file", uploadedImg);
         axios
             .post(
-                "/photoupld",
+                `/photoupld/${button}`,
                 fd
                 //onUploadProgress: ProgressEvent => {console.log("Upload progress: " +Math.round( ProgressEvent.loaded / ProgressEvent.total* 100) +"%")}
             )
-            .then(() => {
-                dispatch(getPatterns());
+            .then(({ data }) => {
+                setModalVis(false);
+                console.log("button after then: ", button);
+                if (button == "regUpload") {
+                    dispatch(getPatterns());
+                } else if (button == "tempUpload") {
+                    dispatch(addPattern(data));
+                }
+                console.log("data: ", data);
+
+                if (data.error) {
+                    setUlError(true);
+                }
             })
             .catch((err) => {
                 console.log("error in axios/post photoupload", err);
             });
     }
 
+    function checkUpload() {
+        setModalVis(true);
+    }
+
     return (
         <div className="uploader">
+            {ulError && <div>Whoops! Looks like you forgot something...</div>}
             <input
                 name="name"
                 type="text"
-                placeholder="give it a name"
-                onChange={(e) => {
+                placeholder="Give it a name"
+                onInput={(e) => {
                     setImgName(e.target.value);
                 }}
             ></input>
@@ -71,9 +92,28 @@ export default function Uploader() {
                 }}
                 accept="image/*"
             />
-
-            <button onClick={photoUpload}>Upload photo</button>
+            <button onClick={checkUpload}>Upload photo</button>
             <p>*Must be under 2MB</p>
+            {modalVis && (
+                <div className="overlay">
+                    <div className="modal">
+                        <h3>
+                            Sorry you didn&apos;t find what you were looking
+                            for!
+                        </h3>
+                        <p>
+                            Would You like to help us improve our database, by
+                            allowing us to add your photo to it?
+                        </p>
+                        <button name="regUpload" onClick={photoUpload}>
+                            Sure, add it!
+                        </button>
+                        <button name="tempUpload" onClick={photoUpload}>
+                            Please don&apos;t
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

@@ -12,6 +12,13 @@ export default function reducer(state = {}, actions) {
             patterns: actions.patterns,
         };
     }
-    //console.log("state: ", state);
+    if (actions.type === "ADD_PATTERNS") {
+        state = {
+            ...state,
+
+            patterns: [...state.patterns, actions.newPattern],
+        };
+    }
+    console.log("state.patterns after ADD: ", state.patterns);
     return state;
 }

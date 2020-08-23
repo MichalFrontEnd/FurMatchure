@@ -16,3 +16,11 @@ export async function getPatterns() {
         patterns: data.rows,
     };
 }
+
+export async function addPattern(newPattern) {
+    console.log("newPattern: ", newPattern);
+    return {
+        type: "ADD_PATTERNS",
+        newPattern,
+    };
+}

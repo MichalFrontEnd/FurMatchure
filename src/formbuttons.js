@@ -3,7 +3,7 @@ import { Stage, Layer, Text, Image, Transformer } from "react-konva";
 import Konva from "konva";
 
 export default function FormButtons(props) {
-    const { stageRef } = props;
+    const { stageRef, patternBg, textInfo } = props;
     function downloadURI(uri, name) {
         var link = document.createElement("a");
         link.download = name;
@@ -22,7 +22,8 @@ export default function FormButtons(props) {
     }
     return (
         <div className="form_buttons">
-            <button onClick={saveCanvas}>💾</button>
+            {!patternBg && <button onClick={saveCanvas}>💾</button>}
+            {/*<button onClick={textInfo}>form</button>*/}
         </div>
     );
 }

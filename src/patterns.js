@@ -5,16 +5,19 @@ import { getPatterns } from "./actions";
 export default function Patterns(props) {
     //console.log("props in patterns: ", props);
     const dispatch = useDispatch();
+    let [patternList, setPatternList] = useState([]);
 
     useEffect(() => {
         dispatch(getPatterns());
     }, []);
+
     //const sofas = useSelector(
     //    (state) =>
     //        state.lager &&
     //        state.lager.filter((category) => category.category == "sofas")
     //);
     const patterns = useSelector((state) => state.patterns);
+    //setPatternList(patterns);
 
     return (
         <div className="pattern_menu">

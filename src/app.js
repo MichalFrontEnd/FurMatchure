@@ -7,6 +7,7 @@ import Lager from "./lager";
 import { TextForm } from "./textform";
 import { SwatchesPicker } from "react-color";
 import FormButtons from "./formbuttons";
+import Welcome from "./welcome";
 
 //import Konva from "konva";
 
@@ -29,6 +30,7 @@ export default function Canvas() {
     const [containerHeight, setContainerHeight] = useState(null);
     const [customFilter, setCustomFilter] = useState(null);
     const [text, setText] = useState([]);
+    const [welcomeVis, setWelcomeVis] = useState(true);
 
     let updateImage;
     let newImageState;
@@ -339,10 +341,14 @@ export default function Canvas() {
 
     //textInfo();
     //console.log("selectedImage AFTER button click: ", selectedImage);
-
-    console.log("text: ", text);
+    function confirm() {
+        setWelcomeVis(false);
+    }
+    //console.log("text: ", text);
     return (
         <div className="container">
+            {welcomeVis && <Welcome confirm={confirm} />}
+
             <Lager getImage={getImage} />
             <div className="canvas_container" ref={containerRef}>
                 <Stage

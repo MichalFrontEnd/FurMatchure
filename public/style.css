@@ -1,18 +1,37 @@
+html {
+    margin: 0;
+}
+
 body {
-    margin: 2em;
+    font-family: "Montserrat", sans-serif;
+    /*margin: 1em;*/
 }
 
 header {
     text-align: center;
-    font-size: 2em;
+    font-size: 3em;
+    font-family: "Caveat", cursive;
+    background-image: url(/images/headbg.jpg);
+    object-fit: cover;
+    object-position: bottom;
+    height: 3em;
+    border-bottom: 3px black solid;
+    /*margin-bottom: 1em;*/
 }
+
 main {
-    height: 100vh;
+    height: 100%;
     width: 95vw;
+    margin: 0;
+
     /*background-color: brown;*/
     /*display: grid*/
 }
 
+label,
+select {
+    margin-left: 0.5em;
+}
 ul {
     list-style: none;
 }
@@ -27,7 +46,7 @@ li {
     /*background-color: fuchsia;*/
     display: grid;
     grid-template-columns: 1fr 2fr 1fr 1fr;
-    grid-template-rows: 100px 1fr;
+    grid-template-rows: 150px 1fr 1fr;
     gap: 0.5%;
     /*grid-template-areas:
         "." "toolkit" "fill"
@@ -52,14 +71,16 @@ li {
 .fill_menu {
     display: flex;
     flex-direction: column;
+    padding: 1em;
 }
 .fill_menu {
-    grid-area: 1 / 4 / span 2 / span 1;
+    grid-area: 1 / 4 / span 3 / span 1;
     /*background-color: salmon;*/
     width: 100%;
     justify-content: space-between;
-    padding: 2em;
+    /*padding: 2em;*/
     z-index: 5;
+    padding-top: 5em;
 }
 
 .welcome {
@@ -69,7 +90,35 @@ li {
     z-index: 10;
     width: 100%;
     height: 100%;
-    background-color: lightblue;
+    /*background-color: lightblue;*/
+    background-image: url(https://i.gifer.com/1Eu3.gif);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-x: center;
+    background-position-y: center;
+}
+
+.welcome_text {
+    margin-left: 3%;
+    margin-bottom: 2%;
+    height: 40%;
+}
+
+.welcome_text h1 {
+    font-size: 5em;
+}
+
+p {
+    font-size: 1.5em;
+}
+
+.welcome_text button {
+    float: right;
+    margin-right: 2%;
+}
+
+#comment {
+    font-size: 1em;
 }
 .toolkit {
     /*grid-area: toolkit;*/
@@ -86,33 +135,51 @@ li {
     /*background-color: lawngreen;*/
 }
 
+#remove {
+    align-self: flex-end;
+    margin-top: 30%;
+    margin-left: 10%;
+}
 .form_buttons button {
-    width: max-content;
+    width: 3em;
+    float: right;
+    margin-top: 50%;
 }
 
 .menu_header {
     text-align: center;
     align-self: center;
-    margin-bottom: 1.5em;
+    /*margin-bottom: 0.5em;*/
     margin-top: 0;
 }
 .ordering {
     display: flex;
     flex-direction: column;
-    width: 20%;
+    width: 100%;
     z-index: 5;
-    flex-wrap: wrap;
+    /*flex-wrap: wrap;*/
 }
 
 .swatches {
     align-self: center;
-    margin-bottom: 3em;
+    margin-bottom: 2em;
 }
 
 button {
+    all: unset;
     width: 10em;
     align-self: center;
     z-index: 5;
+    background-color: transparent;
+    /*text-decoration: underline;*/
+    /*border-bottom: 1px gray solid;*/
+    height: 2em;
+    border-radius: 1%;
+    cursor: pointer;
+    text-align: center;
+    border: transparent 0px solid;
+    border-radius: 5%;
+    box-shadow: 2px 5px 5px #585353;
 }
 
 .pattern_menu,
@@ -120,19 +187,21 @@ button {
     display: grid;
     /*background-color: cornflowerblue;*/
     /*width: 50%;*/
+
     grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, max-content);
+    grid-auto-rows: max-content;
     z-index: 5;
     overflow-y: auto;
     align-self: center;
-    margin-bottom: 3em;
+    /*margin-bottom: 3em;*/
     gap: 0.25em;
 
     /*overflow-y: scroll;*/
 }
 
 /*.pattern_menu {
-    grid-template-rows: repeat(3, 400px);
-    grid-auto-rows: max-content;
+    margin-top: 2em;
 }*/
 .item_img {
     height: 7em;
@@ -145,4 +214,31 @@ button {
 .uploader {
     align-self: center;
     line-height: 2.5em;
+    /*margin-top: 20em;*/
+}
+
+.overlay {
+    height: 100%;
+    width: 100%;
+    z-index: 9;
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    backdrop-filter: blur(2px);
+    justify-content: flex-end;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.modal {
+    z-index: 10;
+    align-self: center;
+    background-color: whitesmoke;
+    width: max-content;
+    /*border-right: 1px solid #585353;
+    border-bottom: 1px solid #585353;
+    box-shadow: 5px 10px 10px #585353;*/
 }

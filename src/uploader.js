@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { getPatterns, addPattern } from "./actions";
+import { getPatterns } from "./actions";
 import { useDispatch } from "react-redux";
 
 export default function Uploader() {
@@ -15,6 +15,7 @@ export default function Uploader() {
     function photoUpload(e) {
         //console.log("e.target.name: ", );
         const button = e.target.name;
+
         e.preventDefault();
         let fd = new FormData();
 
@@ -28,14 +29,11 @@ export default function Uploader() {
                 //onUploadProgress: ProgressEvent => {console.log("Upload progress: " +Math.round( ProgressEvent.loaded / ProgressEvent.total* 100) +"%")}
             )
             .then(({ data }) => {
+                console.log("something: ");
                 setModalVis(false);
-                console.log("button after then: ", button);
-                if (button == "regUpload") {
-                    dispatch(getPatterns());
-                } else if (button == "tempUpload") {
-                    dispatch(addPattern(data));
-                }
                 console.log("data: ", data);
+                console.log("button after then: ", button);
+                dispatch(getPatterns());
 
                 if (data.error) {
                     setUlError(true);
@@ -45,8 +43,9 @@ export default function Uploader() {
                 console.log("error in axios/post photoupload", err);
             });
     }
-
+    console.log("modalVis: ", modalVis);
     function checkUpload() {
+        console.log("button clicked, modal should open");
         setModalVis(true);
     }
 
@@ -70,17 +69,17 @@ export default function Uploader() {
                     }}
                     value={imgCat}
                 >
-                    <option value="dots">Dots</option>
+                    <option value="polkadots">Dots</option>
                     <option value="stripes">Stripes</option>
                     <option value="plaid">Plaid</option>
-                    <option value="checkers">Checkers</option>
+                    <option value="checkers">Checkers/Gingham</option>
                     <option value="floral">Floral</option>
-                    <option value="leaves">Leaves</option>
+                    <option value="greenery">Greenery</option>
                     <option value="fruit">Fruit/Veggie</option>
                     <option value="geometric">Geometric</option>
-                    <option value="vecto">Vector Art</option>
+                    <option value="vector">Vector Art</option>
                     <option value="damasque">Damasque</option>
-                    <option value="children">For Children</option>
+                    <option value="abstract">Abstract</option>
                     <option value="other">Other</option>
                 </select>
             </label>
@@ -93,7 +92,7 @@ export default function Uploader() {
                 accept="image/*"
             />
             <button onClick={checkUpload}>Upload photo</button>
-            <p>*Must be under 2MB</p>
+            <p id="comment">*Must be under 2MB</p>
             {modalVis && (
                 <div className="overlay">
                     <div className="modal">
@@ -111,6 +110,7 @@ export default function Uploader() {
                         <button name="tempUpload" onClick={photoUpload}>
                             Please don&apos;t
                         </button>
+                        {/*<button onClick={setModalVis(false)}>cancel</button>*/}
                     </div>
                 </div>
             )}

@@ -75,43 +75,40 @@ app.get("/getpatterns", (req, res) => {
 app.post("/photoupld/:name", uploader.single("file"), s3.upload, (req, res) => {
     //console.log("is this working?");
 
-    console.log("req.body: ", req.body);
-    console.log("req.params: ", req.params);
+    //console.log("req.body: ", req.body);
+    //console.log("req.params: ", req.params);
     //console.log("req.file in photoupld: ", req.file);
     const { filename } = req.file;
     const url = s3Url + filename;
     req.file.path = url;
     const { name, category } = req.body;
     if (!name) {
-        console.log("no name!");
         res.json({ error: true });
     } else {
         if (req.params.name == "regUpload") {
-            console.log("I'm in if", req.params.name);
+            //console.log("I'm in if", req.params.name);
             db.addImage(name, url, category)
                 .then((results) => {
                     //console.log("results in photoupld: ", results.rows[0].url);
-                    res.json({ data: results.rows[0] });
+                    res.json(results.rows[0]);
                 })
                 .catch((err) => {
                     console.log("error in photoupld :", err);
                 });
         } else {
-            console.log("I'm in else", req.params.name);
+            //console.log("I'm in else", req.params.name);
 
-            db.addToTemp(name, url, category)
-                .then(({ rows }) => {
-                    //console.log("results in photoupld: ", results.rows[0].url);
+            db.addTemp(name, url, category, true)
+                .then((results) => {
+                    //console.log("results in tempoupld: ", results.rows[0]);
 
-                    console.log("rows: ", rows[0]);
-                    res.json(rows[0]);
+                    //console.log("rows: ", rows[0]);
+                    res.json(results.rows[0]);
                 })
                 .catch((err) => {
                     console.log("error in photoupld :", err);
                 });
         }
-
-        console.log("working so far");
     }
 });
 

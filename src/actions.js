@@ -10,7 +10,7 @@ export async function getLager() {
 }
 export async function getPatterns() {
     const { data } = await axios.get("/getpatterns");
-    //console.log("data: ", data);
+    console.log("data: ", data);
     return {
         type: "GET_PATTERNS",
         patterns: data.rows,

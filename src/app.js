@@ -446,21 +446,52 @@ export default function Canvas() {
             {menuVis && (
                 <div className="toolkit">
                     <div className="ordering">
-                        <h3>Change Ordering</h3>
-                        <button onClick={changeOrder} name="moveup">
-                            Move Up
-                        </button>
-                        <button onClick={changeOrder} name="movedown">
-                            Move Down
-                        </button>
-                        <button onClick={changeOrder} name="movetop">
-                            Move To Top
-                        </button>
-                        <button onClick={changeOrder} name="movebottom">
-                            Move To Bottom
-                        </button>
+                        <table>
+                            <tr>
+                                <td>
+                                    <h3>Ordering</h3>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button onClick={changeOrder} name="moveup">
+                                        Move Up
+                                    </button>
+                                </td>
+                                <td>
+                                    <button
+                                        onClick={changeOrder}
+                                        name="movedown"
+                                    >
+                                        Move Down
+                                    </button>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <button
+                                        onClick={changeOrder}
+                                        name="movetop"
+                                    >
+                                        Move To Top
+                                    </button>
+                                </td>
+                                <td>
+                                    <button
+                                        onClick={changeOrder}
+                                        name="movebottom"
+                                    >
+                                        Move To Bottom
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
-                    <button onClick={removeItem}>Remove Item</button>
+
+                    <button id="remove" onClick={removeItem}>
+                        Remove Item
+                    </button>
                 </div>
             )}
             <FormButtons

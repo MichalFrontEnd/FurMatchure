@@ -15,6 +15,11 @@ export default function Lager(props) {
             state.lager &&
             state.lager.filter((category) => category.category == "sofas")
     );
+    const couches = useSelector(
+        (state) =>
+            state.lager &&
+            state.lager.filter((category) => category.category == "couches")
+    );
     //console.log("sofas: ", sofas);
     //console.log("lager: ", lager);
     function pickMenu(e) {
@@ -54,6 +59,24 @@ export default function Lager(props) {
                 <div className="lager">
                     {sofas &&
                         sofas.map((item, i) => {
+                            return (
+                                <div className="item" key={i}>
+                                    <img
+                                        className="item_img"
+                                        src={item.path}
+                                        name={item.name}
+                                        id={item.id}
+                                        onClick={props.getImage}
+                                    />
+                                </div>
+                            );
+                        })}
+                </div>
+            )}
+            {menuDis == "couches" && (
+                <div className="lager">
+                    {couches &&
+                        couches.map((item, i) => {
                             return (
                                 <div className="item" key={i}>
                                     <img

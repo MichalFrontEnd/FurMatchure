@@ -22,20 +22,14 @@ module.exports.addImage = (name, path, category) => {
     return db.query(q, params);
 };
 
-module.exports.addToTemp = (name, path, category) => {
+module.exports.addTemp = (name, path, category) => {
     let q =
-        "INSERT INTO temp (name, path, category) VALUES($1, $2, $3) RETURNING *";
-    let params = [name, path, category];
+        "INSERT INTO patterns (name, path, category, temp) VALUES($1, $2, $3, $4) RETURNING *";
+    let params = [name, path, category, true];
     //console.log("params: ", params);
     return db.query(q, params);
 };
 
-module.exports.displayTemp = () => {
-    const q = "SELECT * FROM temp ORDER BY id DESC LIMIT 1";
-
-    return db.query(q);
-};
-
 module.exports.clearTemp = () => {
-    return db.query("DELETE FROM temp");
+    return db.query("DELETE FROM patterns WHERE temp=true");
 };

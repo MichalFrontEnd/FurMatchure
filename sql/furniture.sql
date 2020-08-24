@@ -1,17 +1,61 @@
 
 -- psql mixnmatch -f sql/furniture.sql
 INSERT INTO items (name, path, category) VALUES (
-    '1-seater',
+    '1seater',
     '/images/furniture/1seater.png',
     'sofas'
-);
-INSERT INTO items (name, path, category) VALUES(
+),(
     'pillow',
     '/images/furniture/pillow.png',
     'misc'
-);
-INSERT INTO items (name, path, category) VALUES(
-    '2-seater',
+),
+(
+    '2seatere',
     '/images/furniture/2seatere.png',
     'couches'
+),
+(
+    'chair',
+    '/images/furniture/Chair.png',
+    'chairs'
+),
+(
+    'stool',
+    '/images/furniture/stool.png',
+    'misc'
+),
+(
+    'stool1',
+    '/images/furniture/stool1.png',
+    'misc'
+),
+(
+    '2-seater2',
+    '/images/furniture/2-seater2.png',
+    'couches'
+),
+(
+    '3-seater',
+    '/images/furniture/3-seater.png',
+    'couches'
+),
+(
+    'lamp',
+    '/images/furniture/lamp.png',
+    'misc'
+),
+(
+    'lamp3',
+    '/images/furniture/lamp3b.png',
+    'misc'
+),
+(
+    'lampw',
+    '/images/furniture/lamp3w.png',
+    'misc'
+),
+(
+    'vase2',
+    '/images/furniture/vase2.png',
+    'misc'
 );

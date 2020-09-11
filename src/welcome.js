@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 export default function Canvas(props) {
     return (
@@ -7,7 +7,7 @@ export default function Canvas(props) {
                 <h1>Welcome!</h1>
                 <h2>Click on a furniture piece to select it.</h2>
                 <p>
-                    Drag it around, resize, check out colour and pattern
+                    Drag it around, resize it, check out colour and pattern
                     combinations!
                 </p>
 

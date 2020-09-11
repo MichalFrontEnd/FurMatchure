@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { getPatterns } from "./actions";
 
 export default function Patterns(props) {
-    //console.log("props in patterns: ", props);
     const [menuDis, setMenuDis] = useState("all");
     const dispatch = useDispatch();
 
@@ -20,10 +19,7 @@ export default function Patterns(props) {
             )
     );
 
-    //setPatternList(patterns);
-
     function pickMenu(e) {
-        //console.log("e.target.id: ", e.target.id);
         setMenuDis(e.target.id);
     }
 
@@ -31,7 +27,7 @@ export default function Patterns(props) {
         <Fragment>
             <ul onClick={pickMenu}>
                 <li id="all">Show all |</li>
-                <li id="polkadots">Polkadots |</li>
+                <li id="polkadots"> Polkadots |</li>
                 <li id="checkers"> Checkers |</li>
                 <li id="floral"> Floral |</li>
                 <li id="abstract"> Abstract |</li>

@@ -11,14 +11,10 @@ module.exports.getLager = () => {
 module.exports.getPatterns = () => {
     return db.query("SELECT * FROM patterns ORDER BY id DESC");
 };
-//module.exports.getPatterns = () => {
-//    return db.query("SELECT * FROM patterns FULL OUTER JOIN temp");
-//};
 
 module.exports.addImage = (name, path, category) => {
     let q = "INSERT INTO patterns (name, path, category) VALUES($1, $2, $3)";
     let params = [name, path, category];
-    //console.log("params: ", params);
     return db.query(q, params);
 };
 
@@ -26,7 +22,6 @@ module.exports.addTemp = (name, path, category) => {
     let q =
         "INSERT INTO patterns (name, path, category, temp) VALUES($1, $2, $3, $4) RETURNING *";
     let params = [name, path, category, true];
-    //console.log("params: ", params);
     return db.query(q, params);
 };
 

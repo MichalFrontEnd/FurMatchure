@@ -20,21 +20,14 @@ export default function Lager(props) {
             state.lager &&
             state.lager.filter((category) => category.category == "couches")
     );
-    //console.log("sofas: ", sofas);
-    //console.log("lager: ", lager);
     function pickMenu(e) {
-        //console.log("e.target.id: ", e.target.id);
         setMenuDis(e.target.id);
     }
-    //console.log("menuDis: ", menuDis);
     return (
         <div className="furniture_menu">
-            {/*<h3 className="menu_header" onClick={pickMenu} id="all">
-                All
-            </h3>*/}
             <ul onClick={pickMenu}>
                 <li id="all">Show all |</li>
-                <li id="sofas">Sofas |</li>
+                <li id="sofas"> Sofas |</li>
                 <li id="couches"> Couches |</li>
             </ul>
             {menuDis == "all" && (

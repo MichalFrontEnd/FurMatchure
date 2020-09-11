@@ -11,9 +11,7 @@ export default function Uploader() {
     const [ulError, setUlError] = useState(false);
     const [modalVis, setModalVis] = useState(false);
 
-    //console.log(" error: ", ulError);
     function photoUpload(e) {
-        //console.log("e.target.name: ", );
         const button = e.target.name;
 
         e.preventDefault();
@@ -110,7 +108,6 @@ export default function Uploader() {
                         <button name="tempUpload" onClick={photoUpload}>
                             Please don&apos;t
                         </button>
-                        {/*<button onClick={setModalVis(false)}>cancel</button>*/}
                     </div>
                 </div>
             )}

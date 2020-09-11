@@ -14,7 +14,6 @@ export default function FormButtons(props) {
     }
 
     function saveCanvas() {
-        //console.log("stageRef: ", stageRef.current.toDataURL());
         var dataURL = stageRef.current.toDataURL();
 
         console.log("dataURL: ", dataURL);

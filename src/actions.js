@@ -2,7 +2,6 @@ import axios from "axios";
 
 export async function getLager() {
     const { data } = await axios.get("/getlager");
-    //console.log("data: ", data);
     return {
         type: "GET_LAGER",
         lager: data.rows,
